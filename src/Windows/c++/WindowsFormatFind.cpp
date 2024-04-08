@@ -8,16 +8,39 @@ extern "C" __declspec(dllexport) const char* getFileFormat(const char* filename)
     }
 
     LARGE_INTEGER li;
+    li.QuadPart = 0x08;
+    SetFilePointerEx(hFile, li, NULL, FILE_BEGIN);
+    int intValue;
+    DWORD bytesReads;
+    if (!ReadFile(hFile, &intValue, sizeof(int), &bytesReads, NULL) || bytesReads != sizeof(int)) {
+        CloseHandle(hFile);
+        return "Error reading integer at offset 0x08";
+    }
+
+    int compareValue = 1;  // Compares format if wrote to file.
+    if (intValue == compareValue) {
+        CloseHandle(hFile);
+        return "ABGR";
+        exit(1);
+    }
+    compareValue++;
+
+    if (intValue == compareValue) {
+        CloseHandle(hFile);
+        return "RGBA8";
+        exit(1);
+    }
+    
     li.QuadPart = 0x20;
     SetFilePointerEx(hFile, li, NULL, FILE_BEGIN); // Skip the first 0x20 bytes
 
     char buffer[4];
     DWORD bytesRead;
     while (ReadFile(hFile, buffer, 4, &bytesRead, NULL) && bytesRead > 0) {
-        if (buffer[0] == '\xFF') {
+        if (buffer[0] == '\xFF' && buffer[3] != '\xFF') {
             CloseHandle(hFile);
             return "ABGR";
-        } else if (buffer[3] == '\xFF') {
+        } else if (buffer[3] == '\xFF' && buffer[0] != '\xFF') {
             CloseHandle(hFile);
             return "RGBA8";
         }
