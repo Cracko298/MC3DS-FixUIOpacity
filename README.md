@@ -3,7 +3,12 @@
 
 ## Usage:
 ```
-python FixUIOpacity.py MySuperCoolAndVeryAwesomeTextureExampleThatIForgotTheNameTo.3dst
+python FixUIOpacity.py SuperCoolAdvancedExample.3dst 50
+```
+### Examplanation:
+```
+python FixUIOpacity.py SuperCoolAdvancedExample.3dst 50
+                       ^ .3DST Image                 ^ Opacity to Set File Too
 ```
 
 ## Building
