@@ -8,7 +8,7 @@ python FixUIOpacity.py SuperCoolAdvancedExample.3dst 50
 ### Examplanation:
 ```
 python FixUIOpacity.py SuperCoolAdvancedExample.3dst 50
-                       ^ .3DST Image                 ^ Opacity to Set File Too
+                       ^ .3DST Image                 ^ Set Opacity
 ```
 
 ## Building
