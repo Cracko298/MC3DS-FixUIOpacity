@@ -17,19 +17,23 @@ extern "C" __declspec(dllexport) const char* getFileFormat(const char* filename)
         return "Error reading integer at offset 0x08";
     }
 
-    int compareValue = 1;  // Compares format if wrote to file.
-    if (intValue == compareValue) {
+    if (intValue == 1) {
         CloseHandle(hFile);
         return "ABGR";
         exit(1);
-    }
-    compareValue++;
+    } else {
 
-    if (intValue == compareValue) {
-        CloseHandle(hFile);
-        return "RGBA8";
-        exit(1);
+        if (intValue == 2) {
+            CloseHandle(hFile);
+            return "RGBA8";
+            exit(1);
+        } else {
+            if (intValue != 0) {
+                return "Error Handeling File Mode Detection.\nFile is Possibly Modified or is Invalid.\nPlease Provide a Proper Texture in *.3DST Format.\n";
+            }
+        }
     }
+
     
     li.QuadPart = 0x20;
     SetFilePointerEx(hFile, li, NULL, FILE_BEGIN); // Skip the first 0x20 bytes
