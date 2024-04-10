@@ -1,5 +1,7 @@
 # MC3DS-FixUIOpacity
 - A tool that Changes Opacity in MC3DS Textures.
+- Please note that this tool only supports Windows systems.
+- No ports to any other Operating Systems are in Sight.
 
 ## Usage:
 ```
