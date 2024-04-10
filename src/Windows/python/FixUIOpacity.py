@@ -14,39 +14,46 @@ if os.path.exists(user_input) == False: print(f"Invalid PATH Provided: '{user_in
 getFileFormat = dll.getFileFormat
 getFileFormat.argtypes = [ctypes.c_char_p];getFileFormat.restype = ctypes.c_char_p
 bFileFormat = getFileFormat(user_input.encode('utf-8'));dFileFormat = bFileFormat.decode('utf-8')
-print(f"{dFileFormat}")
 
-with open(user_input,'rb+') as f:
-    if dFileFormat == 'ABGR':
-        f.seek(0x20)
-        while True:
-            bytes_read = f.read(4)
-            if len(bytes_read) < 4:  # Check if there are at least 4 bytes left
-                break
-            if bytes_read[0] > 0:
-                first_byte = bytes_read[0];new_byte = opacity_value
-                f.seek(-4, 1);f.write(bytes([new_byte]));f.seek(3, 1)
-            else:
-                first_byte = bytes_read[0];new_byte = 0
-                f.seek(-4, 1);f.write(bytes([new_byte]));f.seek(3, 1)
-        f.seek(0x08)
-        f.write(b'\x01')
-        print("Done\n")
-    elif dFileFormat == 'RGBA8':
-        f.seek(0x20)
-        while True:
-            bytes_read = f.read(4)
-            if len(bytes_read) < 4:  # Check if there are at least 4 bytes left
-                break
-            if bytes_read[3] > 0:
-                first_byte = bytes_read[3];new_byte = opacity_value
-                f.seek(-1, 1);f.write(bytes([new_byte]));f.seek(1, 1)
-            else:
-                first_byte = bytes_read[3];new_byte = 0
-                f.seek(-1, 1);f.write(bytes([new_byte]));f.seek(1, 1)
-            f.seek(-1,1)
-        f.seek(0x08)
-        f.write(b'\x02')
-        print("Done\n")
-    else:
-        print(f"{dFileFormat}, was returned by 'getTextureInfo.dll'.\n");exit(1)
+try:        
+    with open(user_input,'rb+') as f:
+        if dFileFormat == 'ABGR':
+            f.seek(0x20)
+            while True:
+                bytes_read = f.read(4)
+                if len(bytes_read) < 4:  # Check if there are at least 4 bytes left
+                    break
+                if bytes_read[0] > 0:
+                    first_byte = bytes_read[0];new_byte = opacity_value
+                    f.seek(-4, 1);f.write(bytes([new_byte]));f.seek(3, 1)
+                else:
+                    first_byte = bytes_read[0];new_byte = 0
+                    f.seek(-4, 1);f.write(bytes([new_byte]));f.seek(3, 1)
+            f.seek(0x08)
+            f.write(b'\x01')
+            print(f"File Format Mode: {dFileFormat}.")
+            print("Done Proccessing File.\n")
+            f.close()
+        elif dFileFormat == 'RGBA8':
+            f.seek(0x20)
+            while True:
+                bytes_read = f.read(4)
+                if len(bytes_read) < 4:  # Check if there are at least 4 bytes left
+                    break
+                if bytes_read[3] > 0:
+                    first_byte = bytes_read[3];new_byte = opacity_value
+                    f.seek(-1, 1);f.write(bytes([new_byte]));f.seek(1, 1)
+                else:
+                    first_byte = bytes_read[3];new_byte = 0
+                    f.seek(-1, 1);f.write(bytes([new_byte]));f.seek(1, 1)
+                f.seek(-1,1)
+            f.seek(0x08)
+            f.write(b'\x02')
+            print(f"File Format Mode: {dFileFormat}.")
+            print("Done Proccessing File.\n")
+            f.close()
+        else:
+            print(f"{dFileFormat}, was returned by 'getTextureInfo.dll'.\n");exit(1)
+except PermissionError:
+    print(f"Access to File: '{user_input}' has been Revoked by the System.\nError Message Provided Below:\n")
+    print(f"{dFileFormat}")
